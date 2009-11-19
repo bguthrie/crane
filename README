@@ -1,0 +1,23 @@
+
+core libs for s3, ec2, ssh.
+
+build upon the core is remote repl and cluster capabilities.
+
+in a couple cases, we use an erlang convention of the ! syntax representing "reomote" (on another process) execution.
+the first argument to ! in erlang is the pid, wheras in our api, it is an open ssh session or socket.
+there is no ! operator or fn, we just use the ! suffix convention to communicate remote execution.
+
+remote shell execution.
+(sh! session "tar -xzf repl.tar.gz")
+
+remote repl evaluation.
+eval! 
+(eval! socket (execute (workflow some-cascading-workflow)))
+
+TODO: add examples for usages.
+
+
+TODO:
+the persistent shell session using jsch ChannelShell is shaky at best, although exec works fine.
+eval! may be simpler if we could use LineNumberingPushbackReader see comment in remote_repl.clj
+stuff to poll and pull info from hadoop tracker url into repl

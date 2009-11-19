@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.clojure</groupId>
+    <artifactId>clojure-pom</artifactId>
+    <version>1.1.0-alpha-SNAPSHOT</version>
+  </parent>
+  <groupId>crane</groupId>
+  <artifactId>crane</artifactId>
+  <name>${artifactId}</name>
+  <version>1.0</version>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>conf</directory>
+      </resource>
+      <resource>
+        <directory>src</directory>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>test</directory>
+      </testResource>
+    </testResources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <!-- optional: precompile some clojure -->
+          <execution>
+            <id>compile</id>
+            <configuration>
+              <tasks>
+                <java fork="true"
+                      classname="clojure.lang.Compile"
+                      classpathref="maven.compile.classpath"
+      		      failonerror="true">
+                  <sysproperty key="clojure.compile.path"
+                               value="${project.build.outputDirectory}" />
+		  <arg value="crane.cluster"/>
+		  <arg value="crane.s3"/>
+		  <arg value="crane.ec2"/>
+		  <arg value="crane.ssh2"/>
+		  <arg value="crane.remote-repl"/>
+		  <arg value="crane.partfiles"/>
+                </java>
+              </tasks>
+            </configuration>
+          </execution>
+	  <execution>
+	    <id>test</id>
+            <configuration>
+              <tasks>
+		<path id="test.path">
+		<fileset dir="lib">
+                    <include name="*.jar"/>
+                  </fileset>  
+		</path>
+		<java classname="clojure.main" 
+		      classpathref="maven.test.classpath"
+		      failonerror="true">
+                  <arg value="-e"/>
+                  <arg value="(require '(crane [tests :as main]))
+                              (main/run)"/>
+                </java>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>clojure-contrib</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.typica</groupId> 
+      <artifactId>typica</artifactId>
+      <version>1.5.2a</version>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.jets3t</groupId>
+      <artifactId>jets3t</artifactId>
+      <version>0.7.1</version>
+    </dependency> 
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jsch</artifactId>
+      <version>0.1.42</version>
+    </dependency> 
+    <dependency>
+      <groupId>jline</groupId>
+      <artifactId>jline</artifactId>
+      <version>0.9.94</version>
+    </dependency> 
+  </dependencies>
+</project>

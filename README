@@ -1,4 +1,3 @@
-
 core libs for s3, ec2, ssh.
 
 build upon the core is remote repl and cluster capabilities.
@@ -16,8 +15,24 @@ eval!
 
 TODO: add examples for usages.
 
-
 TODO:
 the persistent shell session using jsch ChannelShell is shaky at best, although exec works fine.
 eval! may be simpler if we could use LineNumberingPushbackReader see comment in remote_repl.clj
 stuff to poll and pull info from hadoop tracker url into repl
+
+== Usage: crane.ec2
+
+  (ns crane.demo
+    (:use crane.ec2))
+
+  (def my-ec2
+    (ec2 {:key "somekey" :secretkey "somesecret/key"}))
+  
+  (def basic-fedora "ami-3c47a355")
+  
+  (run-instances my-ec2 
+    {:instance-type (instance-types :m1.small)
+     :image basic-fedora
+     :instances 1
+     :key-name "gsg-keypair"
+     :group "default"})
